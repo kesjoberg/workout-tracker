@@ -10,7 +10,7 @@ router.get('/', (req,res) => {
 
 //Exercise route
 router.get('/exercise', (req, res) =>{
-  res.sendFile(path.join(__dirnname + "../../public/exercise.html"));
+  res.sendFile(path.join(__dirname + "../../public/exercise.html"));
 });
 
 // Stats router

@@ -3,7 +3,8 @@ const Workout = require("../../models/Workout");
 
 //Gets all workouts
 router.get("/", (req, res) => {
-  Workout.find({})
+  Workout.aggregate([{ $addFields: { totalDuration: { $sum: '$exercises.duration', }, }, },
+    ])
   .then(data => {
     res.json(data);
   })
@@ -24,29 +25,46 @@ router.get("/:id", (req, res) => {
 });
 
 //Creates a new workout
-router.post("/", ({ body }, res) => {
-  Workout.create(req.body)
+router.post("/", (req, res) => {
+  console.log()
+  Workout.create({})
     .then(newEntry => {
+      console.log(newEntry);
       res.json(newEntry);
     })
     .catch(err => {
-      res.status(400).json(err);
+      res.json(err);
     });
 });
 
+// //Creates a new exercise
+// router.post("/:id",(req, res) => {
+//   Workout.create(req.body)
+//   .then(newExercise => {
+//     res.json(newExercise);
+//   })
+//   .catch(err => {
+//     res.json(err);
+//   });
+// });
+
 //Updates an existing workhout
 router.put("/:id", (req, res) => {
-  Workout.findOneaAndUpdate(
+  Workout.findByIdAndUpdate(
     {_id: req.params.id},
-    req.body,
+    {$push: {exercises: req.body}},
     { new: true}
   )
   .then(updatedEntry => {
+    console.log(updatedEntry)
     res.json(updatedEntry);
   })
   .catch(err => {
     res.json(err);
   });
 });
+
+// Gets data for the range
+
 
 module.exports = router;
